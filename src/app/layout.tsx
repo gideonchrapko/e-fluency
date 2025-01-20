@@ -1,17 +1,25 @@
 import '@/styles/globals.css';
 
-import { GeistSans } from 'geist/font/sans';
+import { Inter as FontSans, Open_Sans } from 'next/font/google';
 import { type Metadata } from 'next';
 
 import { TRPCReactProvider } from '@/trpc/react';
 import { ThemeProvider } from '@/components/theme-provider';
 import { siteConfig } from '@/config/site';
+import { Toaster } from '@/components/ui/toaster';
+import { cn } from '@/lib/utils';
 
-// export const metadata: Metadata = {
-//   title: 'Efluency App',
-//   description: 'Helping you perfect your email outreach',
-//   icons: [{ rel: 'icon', url: '/favicon.ico' }],
-// };
+const fontSans = FontSans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  adjustFontFallback: true,
+});
+
+const fontHeading = Open_Sans({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-heading',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -64,10 +72,26 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          fontSans.variable,
+          fontHeading.variable
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TRPCReactProvider>
+            {children}
+            {/* <Analytics /> */}
+            <Toaster />
+            {/* <TailwindIndicator /> */}
+          </TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>
